@@ -3,6 +3,8 @@ import { useEffect, useState } from "react";
 import { useNavigate } from "react-router-dom";
 import { BrowserRouter, Link, Outlet, Route, Routes, useLocation } from "react-router-dom"
 import DehazeIcon from '@mui/icons-material/Dehaze';
+import MainLayout from "../layouts/MainLayout";
+
 
 const Admin = () => {
 
@@ -40,27 +42,38 @@ const Admin = () => {
   },[]);
 
   return (
-    <div>
-      <Button sx={{margin:"10px 3px 4px 10px"}} onClick={() => setDrawer(!drawer)}>
-        <DehazeIcon/>
-      </Button>
-      <Drawer
-        // variant="permanent"
-        open={drawer}
-        elevation={10}
-      >
-        <Button sx={{margin:"10px 30px 40px 10px"}} onClick={() => setDrawer(!drawer)}>
-          <DehazeIcon />
+    <MainLayout>
+      <Container sx={{
+          overflow: "hidden",
+          height: "100vh",
+          display: "flex",
+          flexDirection:"column",
+          justifyContent: "flex-start",
+          alignItems: "flex-start",
+          // border: "2px solid red",
+          backgroundColor: "rgba(0, 24, 57, 0.6)",
+        }}>
+        <Button sx={{margin:"10px 3px 4px 10px"}} onClick={() => setDrawer(!drawer)}>
+          <DehazeIcon/>
         </Button>
-        <Button onClick={() => {
-          navigate("");
-        }}>press</Button>
-        {List}
-      </Drawer>
-      <Container>
-        <Outlet />
+        <Drawer
+          // variant="permanent"
+          open={drawer}
+          elevation={10}
+        >
+          <Button sx={{margin:"10px 30px 40px 10px"}} onClick={() => setDrawer(!drawer)}>
+            <DehazeIcon />
+          </Button>
+          <Button onClick={() => {
+            navigate("");
+          }}>press</Button>
+          {List}
+        </Drawer>
+        <Container>
+          <Outlet />
+        </Container>
       </Container>
-    </div>
+    </MainLayout>
   )
 }
 

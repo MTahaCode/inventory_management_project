@@ -31,7 +31,7 @@ const Products: React.FC<ProductsProps> = ({StoreId}) => {
         // const List = ProductsList;
         // List.push(data);
         setProductsList(data);
-        // console.log(data);
+        console.log(data);
     })
 },[]);
 

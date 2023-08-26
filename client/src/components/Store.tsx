@@ -33,8 +33,8 @@ const Store = () => {
       </Tabs>
       {(tab === 0) && <Workers StoreId={Id}/>}
       {(tab === 1) && <Products StoreId={Id}/>}
-      {(tab === 2) && <Transactions />}
-      {(tab === 3) && <Deliveries />}
+      {(tab === 2) && <Transactions StoreId={Id}/>}
+      {(tab === 3) && <Deliveries StoreId={Id}/>}
     </Box>
   )
 }

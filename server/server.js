@@ -57,7 +57,9 @@ app.post("/verifyCredentials", (req,res) => {
                 }
                 else if (member.Role === "staff")
                 {
-                    res.json({User:"staff"})
+                    res.json({User:"staff",
+                              storeId: member.StoreId,
+                            })
                 }
         }
     )
@@ -108,6 +110,7 @@ app.post("/getProductsInfo", (req, res) => {
                     .findOne({ _id: new ObjectId(product.id) });
 
                 const info = {
+                    Id: product.id,
                     Name: thing.Name,
                     Desc: thing.Desc,
                     Price: thing.Price,
@@ -127,14 +130,163 @@ app.post("/getProductsInfo", (req, res) => {
     })
 })
 
+app.post("/getTransactionsHistory", async (req,res) => {
+    
+    const Id = req.body.id;
+    // console.log(Id);
+
+    const TransactionArray = await db.collection("Transactions_Histories")
+                            .find({ StoreId: Id })
+                            .toArray();
+                            // .then((data) => {return data});
+
+    console.log("Obtained all the stores transactions",TransactionArray);
+
+    const RequiredInfo = await Promise.all(TransactionArray.map(async (transaction) => {
+        const Products = transaction.Products;
+
+        const RequiredProductInfo = await Promise.all(Products.map(async (product) => {
+            
+            const FullProductInfo = await db.collection("Products")
+                                        .findOne({ _id: new ObjectId(product.Id) });
+
+            console.log("Obtained Full Product Info: ",FullProductInfo)
+            
+            const Info = {
+                Name: FullProductInfo.Name,
+                Quantity: product.Quantity,
+            }
+
+            return Info;
+        }))
+
+        console.log("Obtained the requied info of each product in each transaction",RequiredProductInfo);
+
+        const Info = {
+            Products: RequiredProductInfo,
+            DateTime: transaction.DateTime,
+            TotalPrice: transaction.TotalPrice,
+        }
+
+        return Info;
+
+    }))
+
+    // const gettingProductName = async (productId) => {
+    //     const Product = await db.collection("Products")
+    //                             .findOne({ _id: new ObjectId(productId)})
+    //     return Product.Name;
+    // }
+
+    // const TransactionsArray = await db.collection("Transactions_Histories")
+    //                                 .find({ StoreId: Id })
+    //                                 .toArray();
+    
+    // console.log(TransactionsArray);
+
+    // const RequiredInfo = TransactionsArray.map(async (transactionIndex) => {
+
+    //     //gets the product name of each product in a single transaction index
+    //     const ProductsArray = transactionIndex.Products.map(async (product) => {
+    //         // const productName = await gettingProductName(product.Id);
+    //         const productName = product.Id;
+    //         const ProductInfo = {
+    //             Name: productName,
+    //             Quantity: product.Quantity,
+    //         }
+    //         return ProductInfo;
+    //     })
+
+    //     const info = {
+    //         Products: ProductsArray,
+    //         DateTime: transactionIndex.DateTime,
+    //         TotalPrice: transactionIndex.TotalPrice,
+    //     }
+
+    //     // const info = {
+    //     //     ProductName: productName,
+    //     //     Quantity: historyIndex.Quanitty,
+    //     //     DateTime: historyIndex.DateTime,
+    //     //     TotalPrice: historyIndex.TotalPrice,
+    //     // }
+    //     return info;
+    // });
+
+    console.log("Got all the info we need",RequiredInfo);
+    res.json(RequiredInfo);
+
+})
+
+app.post("/getDeliveryHistory", async (req,res) => {
+
+    const Id = req.body.StoreId;
+
+    const AllDeliveries = await db.collection("Delivery_Histories")
+    .find({ _id: new ObjectId(Id) })
+    .toArray()
+
+    const RequiredInfo = AllDeliveries.map(async (delivery) => {
+        const Supplier = await db.collection("Suppliers_Information")
+        .findOne({ _id: new ObjectId(delivery.SupplierId) })
+
+        const Product = await db.collection("Products")
+        .findOne({ _id: new ObjectId(deliver.ProductId) })
+
+        return {
+            SupplierName: Supplier.Name,
+            ProductName: Product.Name,
+            Price: delivery.Price,
+            Date: delivery.Date,
+        }
+    })
+
+    res.json(RequiredInfo);
+
+    // res.json([{
+    //     SupplierName: "Nothing",
+    //     ProductName: "Nothing",
+    //     Price: 0
+    // }])
+})
+
+app.put("/ModifyProducts", (req, res) => {
+    // console.log(req.body);
+    // const item = req.body;
+    const storeId = req.body.StoreId;
+    const productId = req.body.Product.Id;
+    const newQuantity = req.body.Product.Quantity;
+
+    // console.log(storeId, productId, newQuantity);
+
+    db.collection("Stores")
+    .updateOne(
+        { 
+            _id: new ObjectId(storeId),
+            "Products.id": productId,
+        },
+        {
+            $set: {
+                "Products.$.quantity": newQuantity,
+            }
+        }    
+    )
+    .then(res.json({msg: "Modified"}))
+
+})
+
+app.post("/addTransaction", (req,res) => {
+    console.log(req.body);
+    db.collection("Transactions_Histories")
+    .insertOne(req.body)
+    .then(res.json({msg: "added"}))
+})
+
 connectToDb((err) => {
     if (!err)
     {
         app.listen(5000, () => {
             console.log("app listening on port 5000");
-            // cron.schedule("*/10 * * * * *", () => {
-            //     UpdateAttendanceRecord();
-            // })
+            // db.collection("Transactions_")
         })
         db = getDb();
     }

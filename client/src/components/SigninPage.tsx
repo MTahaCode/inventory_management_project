@@ -42,6 +42,7 @@ const SigninPage: React.FC = () => {
                 navigate("/staff", 
                 { state : { 
                     userType:"staff",
+                    storeId: data.storeId
                 }});
             }
             else {
