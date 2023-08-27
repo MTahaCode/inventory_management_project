@@ -146,7 +146,12 @@ const Staff: React.FC = () => {
         },
         body: JSON.stringify(TransactionPayload),
     }).then(res => res.json())
-    .then(data => console.log(data));
+    .then(data => {
+      console.log(data);
+      setSelectedList([]);
+      setTotal(0);
+    });
+    
 
   }
 

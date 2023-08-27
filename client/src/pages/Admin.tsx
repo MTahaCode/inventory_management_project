@@ -66,7 +66,7 @@ const Admin = () => {
           </Button>
           <Button onClick={() => {
             navigate("");
-          }}>press</Button>
+          }}>Home</Button>
           {List}
         </Drawer>
         <Container>
