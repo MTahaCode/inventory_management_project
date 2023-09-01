@@ -5,7 +5,7 @@ import Admin from "./pages/Admin";
 import Manager from "./pages/Manager";
 import Staff from "./pages/Staff";
 import Store from "./components/Store";
-import DeliveryRequests from "./components/DeliveryRequests"
+import AdminHome from "./components/AdminHome"
 import { BrowserRouter, Link, Outlet, Route, Routes, useLocation, useNavigate } from "react-router-dom"
 
 const App: React.FC = () => {
@@ -15,7 +15,7 @@ const App: React.FC = () => {
       <Routes>
         <Route path="/" element={<Login />}/>
         <Route path="/admin" element={<Admin />}>
-          <Route path="" element={<DeliveryRequests />}/>
+          <Route path="" element={<AdminHome />}/>
           <Route path="store" element={<Store />}/>
         </Route>
         <Route path="/manager" element={<Manager />}/>

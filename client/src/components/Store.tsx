@@ -21,17 +21,25 @@ const Store = () => {
 
   return (
     <Box>
-      <Typography>{Name}</Typography>
+      <Typography 
+        variant='h3' 
+        color={"primary"}
+        margin={"0.5em 0em 1em 0em"}
+      >
+        {Name}
+      </Typography>
+      {/* <Deliveries StoreId={Id} /> */}
       <Tabs
         indicatorColor="primary"
         value={tab}
+        variant='scrollable'
       >
-        <Tab label="Workers" onClick={() => handleChange(0)}/>
-        <Tab label="Products" onClick={() => handleChange(1)}/>
-        <Tab label="Transactions" onClick={() => handleChange(2)}/>
-        <Tab label="Deliveries" onClick={() => handleChange(3)}/>
+        <Tab sx={{fontSize: "1em"}} label="Workers" onClick={() => handleChange(0)}/>
+        <Tab sx={{fontSize: "1em"}} label="Products" onClick={() => handleChange(1)}/>
+        <Tab sx={{fontSize: "1em"}} label="Transactions" onClick={() => handleChange(2)}/>
+        <Tab sx={{fontSize: "1em"}} label="Deliveries" onClick={() => handleChange(3)}/>
       </Tabs>
-      {(tab === 0) && <Workers StoreId={Id}/>}
+      {(tab === 0) && <Workers StoreId={Id} UserType={"Admin"}/>}
       {(tab === 1) && <Products StoreId={Id}/>}
       {(tab === 2) && <Transactions StoreId={Id}/>}
       {(tab === 3) && <Deliveries StoreId={Id}/>}

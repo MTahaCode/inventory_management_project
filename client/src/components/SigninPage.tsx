@@ -35,6 +35,7 @@ const SigninPage: React.FC = () => {
                 navigate("/manager", 
                   { state : { 
                       userType:"manager",
+                      storeId: data.StoreId,
                   }});
             }
             else if (data.User === "staff")
@@ -129,12 +130,14 @@ const SigninPage: React.FC = () => {
             placeholder="Enter your login..."
             isIconActive={false}
             Input={setUserName}
+            Type={"text"}
           />
           <CustomInput
             label="Password"
             placeholder="Enter your password..."
             isIconActive={true}
             Input={setPassword}
+            Type={"text"}
           />
           {/* <CustomInput
             label="MFA Code"

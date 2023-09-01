@@ -53,7 +53,10 @@ app.post("/verifyCredentials", (req,res) => {
                 }
                 else if (member.Role === "manager")
                 {
-                    res.json({User:"manager"})
+                    res.json({
+                        User:"manager",
+                        StoreId: member.StoreId,
+                    })
                 }
                 else if (member.Role === "staff")
                 {
@@ -62,6 +65,73 @@ app.post("/verifyCredentials", (req,res) => {
                             })
                 }
         }
+    )
+})
+
+app.post("/Register", async (req, res) => {
+    const StoreId = req.body.storeId;
+    const Name = req.body.name;
+    const Password = req.body.password;
+    const Role = req.body.role;
+
+    if (! Name || !Password)
+    {
+        res.json({msg: "Something is empty"})
+    }
+
+    const Exists = await db.collection("Users_Information").findOne({ Name: Name });
+
+    if (Exists)
+    {
+        res.json({msg: "This User Exists"})
+    }
+    else
+    {
+        const id = await db.collection("Users_Information")
+        .insertOne({
+            Name: Name,
+            Password: Password,
+            StoreId: StoreId,
+            Role: Role,
+        })
+        const UserId = id.insertedId.toString();
+
+        db.collection("Stores").updateOne(
+            {
+                _id: new ObjectId(StoreId),
+            },
+            {
+                $push: {
+                    Workers: UserId,
+                }
+            }
+        )
+        .then(
+            res.json({ msg: "User Added" })
+        )
+
+    }
+
+
+})
+
+app.post("/DeleteEmployee", (req, res) => {
+    const StoreId = req.body.StoreId;
+    const UserId = req.body.UserId;
+
+    db.collection("Stores").updateOne(
+        { 
+            _id: new ObjectId(StoreId) 
+        },
+        {
+            $pull: {
+                Workers: UserId,
+            }
+        }
+    )
+
+    db.collection("Users_Information").deleteOne({ _id: new ObjectId(UserId) }).then(
+        res.json({msg: "User Deleted"})
     )
 })
 
@@ -130,6 +200,26 @@ app.post("/getProductsInfo", (req, res) => {
     })
 })
 
+app.get("/getAllProducts", (req, res) => {
+    db.collection("Products")
+    .find()
+    .toArray()
+    .then((data) => {
+
+        const RequiredInfo = data.map((product) => {
+            return {
+                Id: product._id.toString(),
+                Name: product.Name,
+                Desc: product.Desc,
+                Price: product.Price,
+                Quantity: 0,
+            }
+        })
+        res.json(RequiredInfo);
+        // console.log(RequiredInfo);
+    });
+})
+
 app.post("/getTransactionsHistory", async (req,res) => {
     
     const Id = req.body.id;
@@ -179,28 +269,45 @@ app.post("/getTransactionsHistory", async (req,res) => {
 
 app.post("/getDeliveryHistory", async (req,res) => {
 
-    const Id = req.body.StoreId;
+    const StoreId = req.body.id;
 
-    const AllDeliveries = await db.collection("Delivery_Histories")
-    .find({ _id: new ObjectId(Id) })
-    .toArray()
+    // const Store = await db.collection("Stores").findOne({ _id: new ObjectId(StoreId) });
 
-    const RequiredInfo = AllDeliveries.map(async (delivery) => {
-        const Supplier = await db.collection("Suppliers_Information")
-        .findOne({ _id: new ObjectId(delivery.SupplierId) })
+    // const StoreName = Store.Name;
 
-        const Product = await db.collection("Products")
-        .findOne({ _id: new ObjectId(deliver.ProductId) })
+    // console.log(StoreName);
 
+    const AllDeliveries = await db.collection("Delivery_Histories").find({ StoreId: StoreId }).toArray();
+
+    const RequiredInfo = await Promise.all(AllDeliveries.map(async (delivery) => {
+        const ProductName = (await db.collection("Products").findOne({ _id: new ObjectId(delivery.ProductId) })).Name;
+        const SupplierName = (await db.collection("Suppliers_Information").findOne({ _id: new ObjectId(delivery.SupplierId) })).Name;
         return {
-            SupplierName: Supplier.Name,
-            ProductName: Product.Name,
-            Price: delivery.Price,
-            Date: delivery.Date,
+            SupplierName: SupplierName,
+            ProductName: ProductName,
+            Price: delivery.TotalPrice,
+            // Date: delivery.Date,
         }
-    })
+    }));
 
     res.json(RequiredInfo);
+
+    // const RequiredInfo = AllDeliveries.map(async (delivery) => {
+    //     const Supplier = await db.collection("Suppliers_Information")
+    //     .findOne({ _id: new ObjectId(delivery.SupplierId) })
+
+    //     const Product = await db.collection("Products")
+    //     .findOne({ _id: new ObjectId(deliver.ProductId) })
+
+    //     return {
+    //         SupplierName: Supplier.Name,
+    //         ProductName: Product.Name,
+    //         Price: delivery.Price,
+    //         Date: delivery.Date,
+    //     }
+    // })
+
+    // res.json(RequiredInfo);
 
     // res.json([{
     //     SupplierName: "Nothing",
@@ -232,6 +339,37 @@ app.put("/ModifyProducts", (req, res) => {
     )
     .then(res.json({msg: "Modified"}))
 
+})
+
+app.delete("/deleteProductFromStore", (req, res) => {
+    db.collection("Stores").updateOne(
+        { 
+            _id: new ObjectId(req.body.StoreId), 
+        },
+        {
+            $pull: {
+                Products: {
+                    id: req.body.ProductId,
+                }
+            },
+        }
+    ).then(res.json({msg: "It is deleted"}))
+})
+
+app.post("/addProductToStore" ,(req, res) => {
+    db.collection("Stores").updateOne(
+        { 
+            _id: new ObjectId(req.body.StoreId), 
+        },
+        {
+            $push: {
+                Products: {
+                    id: req.body.ProductId,
+                    quantity: 0,
+                }
+            },
+        }
+    ).then(res.json({msg: "It is deleted"}))
 })
 
 app.post("/addTransaction", (req,res) => {
@@ -316,6 +454,67 @@ app.post("/RejectRequest", async (req, res) => {
         res.json({ msg: "Done"})
     )
 
+})
+
+app.delete("/RemoveProductRecord", (req, res) => {
+    db.collection("Stores").updateMany(
+        {
+            // "Products.id" : req.body.ProductId,
+        },
+        {
+            $pull: {
+                Products: {
+                    id: req.body.ProductId,
+                }
+            }
+        }
+    ).then(
+        db.collection("Products").deleteOne({ _id: new ObjectId(req.body.ProductId) })
+        .then(res.json({msg: "Record is deleted"}))
+    )
+})
+
+app.post("/AdminAddProduct", async (req, res) => {
+    
+    const SupplierId = (await db.collection("Suppliers_Information").findOne())._id.toString();
+
+    console.log(SupplierId);
+
+    db.collection("Products")
+    .insertOne({
+        Name: req.body.ProductName,
+        Desc: req.body.Desc,
+        Price: req.body.Price,
+        Supplier: [SupplierId],
+    }).then(res.json({ msg: "New Product Added" }));
+    
+})
+
+app.post("/AdminAddStore", (req, res) => {
+    db.collection("Stores").insertOne({
+        Name: req.body.StoreName,
+        Location: req.body.Location,
+        Workers: [],
+        Products: [],
+    }).then(res.json({msg: "New Store Added"}))
+})
+
+app.delete("/RemoveStoreRecord", (req, res) => {
+    db.collection("Transactions_Histories").deleteMany({
+        StoreId: req.body.StoreId,
+    }).then(
+        db.collection("Delivery_Histories").deleteMany({
+            StoreId: req.body.StoreId,
+        }).then(
+            db.collection("Users_Information").deleteMany({
+                StoreId: req.body.StoreId
+            }).then(
+                db.collection("Stores").deleteOne({
+                    _id: new ObjectId(req.body.StoreId),
+                }).then(res.json({msg: "All store Record has been deleted"}))
+            )
+        )
+    )
 })
 
 connectToDb((err) => {

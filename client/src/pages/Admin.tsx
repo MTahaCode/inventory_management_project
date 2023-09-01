@@ -13,6 +13,8 @@ const Admin = () => {
   //nav
   const [List, setList] = useState([]);
   const [drawer, setDrawer] = useState(false);
+  const [Trigger, setTrigger] = useState(false);
+
 
   useEffect(() => {
     fetch("/getAdminNavLinks")
@@ -39,12 +41,17 @@ const Admin = () => {
       )
     )
 
-  },[]);
+  },[Trigger]);
+
+  const HandleReloading = () => {
+    setDrawer(!drawer);
+    setTrigger(!Trigger);
+  }
 
   return (
     <MainLayout>
       <Container sx={{
-          overflow: "hidden",
+          overflow: "auto",
           height: "100vh",
           display: "flex",
           flexDirection:"column",
@@ -53,7 +60,7 @@ const Admin = () => {
           // border: "2px solid red",
           backgroundColor: "rgba(0, 24, 57, 0.6)",
         }}>
-        <Button sx={{margin:"10px 3px 4px 10px"}} onClick={() => setDrawer(!drawer)}>
+        <Button sx={{margin:"10px 3px 4px 10px"}} onClick={() => HandleReloading()}>
           <DehazeIcon/>
         </Button>
         <Drawer
@@ -61,7 +68,7 @@ const Admin = () => {
           open={drawer}
           elevation={10}
         >
-          <Button sx={{margin:"10px 30px 40px 10px"}} onClick={() => setDrawer(!drawer)}>
+          <Button sx={{margin:"10px 30px 40px 10px"}} onClick={() => HandleReloading()}>
             <DehazeIcon />
           </Button>
           <Button onClick={() => {

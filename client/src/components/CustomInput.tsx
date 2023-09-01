@@ -13,8 +13,9 @@ const CustomInput: React.FC<{
   isIconActive: boolean;
   label: string;
   placeholder: string;
+  Type: string;
   Input: Function;
-}> = ({ isIconActive, label, placeholder, Input }) => {
+}> = ({ isIconActive, label, placeholder, Input, Type }) => {
   return (
     <Box
       display="flex"
@@ -36,6 +37,7 @@ const CustomInput: React.FC<{
           <InputBase
             placeholder={placeholder}
             fullWidth
+            type={Type}
             sx={{
               bgcolor: colors.input[500],
               p: 1,

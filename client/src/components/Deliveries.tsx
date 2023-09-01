@@ -9,7 +9,7 @@ interface ListTemplate {
   SupplierName: string;
   ProductName: string;
   Price: number;
-  Date: Date;
+  // Date: Date;
 }
 
 const Deliveries: React.FC<deliveryProps> = ({ StoreId }) => {
@@ -38,19 +38,34 @@ const Deliveries: React.FC<deliveryProps> = ({ StoreId }) => {
     <Box>
       {deliveryHistory.map((item) => {
         return (
-          <Paper>
-            <Typography>
-              {item.ProductName}
-            </Typography>
-            <Typography>
-              {item.SupplierName}
-            </Typography>
-            <Typography>
-              {item.Price}
-            </Typography>
-            <Typography>
-              {item.Date.toISOString()}
-            </Typography>
+          <Paper sx={{padding: "1em 0em 1em 2em", margin: "0em 0em 1em 0em"}}>
+            <Box sx={{display: "flex", alignItems: "center", gap:"1em"}}>
+              <Typography variant='h6' color={"primary"}>
+                Products : 
+              </Typography>
+              <Typography>
+                {item.ProductName}
+              </Typography>
+            </Box>
+            <Box sx={{display: "flex", alignItems: "center", gap:"1em"}}>
+              <Typography variant='h6' color={"primary"}>
+                Supplier : 
+              </Typography>
+              <Typography>
+                {item.SupplierName}
+              </Typography>
+            </Box>
+            <Box sx={{display: "flex", alignItems: "center", gap:"1em"}}>
+              <Typography variant='h6' color={"primary"}>
+                Total Price : 
+              </Typography>
+              <Typography>
+                {item.Price}
+              </Typography>
+            </Box>
+              {/* <Typography>
+                {item.Date.toISOString()}
+              </Typography> */}
           </Paper>
         )
       })}
