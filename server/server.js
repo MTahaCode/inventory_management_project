@@ -517,6 +517,67 @@ app.delete("/RemoveStoreRecord", (req, res) => {
     )
 })
 
+
+
+app.post("/getTotals", async (req,res) => {
+    
+    const dateFromReq = new Date(req.body.Date); // assuming req.body.Date is in 'yyyy-mm-dd' format
+    const startOfReqDate = new Date(dateFromReq.setHours(0,0,0,0));
+    const startOfNextDate = new Date(dateFromReq.setHours(24,0,0,0));
+
+    const AllSales = await db.collection("Transactions_Histories").find({
+        dateTime: {
+            $gte: startOfReqDate,
+            $lt: startOfNextDate
+        }
+    }).forEach((sale) => sale.TotalPrice);
+
+    console.log(AllSales);
+
+    // const TodaySales = AllSales.filter((sale) => {
+    //     const reqDate = new Date(dateFromReq)
+    //     reqDate.setHours(0, 0, 0, 0);
+
+    //     const saleDate = new Date(sale.DateTime);
+    //     saleDate.setHours(0, 0, 0, 0);
+
+    //     if (reqDate === saleDate)
+    //     {
+    //         return 1;
+    //     }
+    //     return 0;
+    // })
+
+    // console.log(TodaySales);
+
+    // const AllDeliveries = await db.collection("Delivery_Histories").find().toArray();
+    
+    // const TotalSales = AllSales.reduce((total, sale) => total+sale, 0);
+
+    // const TotalPurchases = AllSales.length;
+    // const TotalDeliveries = AllDeliveries.reduce((total, sale) => total+sale,0);
+    // // .find({
+    // //     dateTime: {
+    // //         $gte: startOfReqDate,
+    // //         $lt: startOfNextDate
+    // //     }
+    // // }).toArray();
+
+    // const RequiredInfo = {
+    //     totalSales: TotalSales,
+    //     totalPurchases: TotalPurchases,
+    //     totalDeliveries: TotalDeliveries,
+    // }
+
+    // console.log(RequiredInfo);
+    // res.json( {
+    //     totalSales: TotalSales,
+    //     totalPurchases: TotalPurchases,
+    //     totalDeliveries: TotalDeliveries,
+    // });
+
+})
+
 connectToDb((err) => {
     if (!err)
     {

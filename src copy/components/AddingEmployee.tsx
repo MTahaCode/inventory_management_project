@@ -1,5 +1,5 @@
 import { Box, Grid, Typography, Checkbox, Button, Radio, RadioGroup, FormControlLabel, FormControl, FormLabel, colors } from '@mui/material'
-import CustomInput from "../components/CustomInput"
+import CustomInput from "./CustomInput"
 import React, { useRef, useState, useEffect } from 'react'
 import { useNavigate } from 'react-router-dom';
 

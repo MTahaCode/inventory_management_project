@@ -1,6 +1,6 @@
 import { Box, Button, Table, TableBody, TableCell, TableContainer, TableHead, TableRow, Typography } from '@mui/material';
 import React, { useEffect, useState } from 'react'
-import AddingProduct from "../components/AddingProduct"
+import AddingProduct from "./AddingProduct"
 
 interface ListTemplate {
     Id: string;

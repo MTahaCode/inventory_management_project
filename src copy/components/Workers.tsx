@@ -1,6 +1,6 @@
 import { Box, Typography, Paper, Button } from "@mui/material"
 import { useEffect, useState} from "react"
-import AddingEmployee from "../components/AddingEmployee"
+import AddingEmployee from "./AddingEmployee"
 
 interface WorkersProps {
     StoreId: number;
