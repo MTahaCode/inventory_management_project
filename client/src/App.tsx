@@ -14,6 +14,9 @@ import UserManagement from "./Pages/AdminPages/UserManagement";
 import Admin from "./Pages/Admin";
 import CreateUser from "./Pages/AdminPages/UserPages/CreateUser"
 import UserList from "./Pages/AdminPages/UserPages/UserList"
+import RoleManagement from "./Pages/AdminPages/UserPages/RoleManagement"
+import ProductList from "./Pages/AdminPages/ProductPages/ProductList";
+import CreateProducts from "./Pages/AdminPages/ProductPages/CreateProducts"
 import { BrowserRouter, Link, Outlet, Route, Routes, useLocation, useNavigate } from "react-router-dom"
 
 const App: React.FC = () => {
@@ -27,9 +30,12 @@ const App: React.FC = () => {
           <Route path="userManagement" element={<UserManagement />}>
             <Route path="userList" element={<UserList />}/>
             <Route path="createUser" element={<CreateUser />}/>
-            <Route path="RolesManagement" element={<TransactionsManagement />}/>
+            <Route path="roleManagement" element={<RoleManagement />}/>
           </Route>
-          <Route path="products" element={<ProductsManagement />}/>
+          <Route path="products" element={<ProductsManagement />}>
+            <Route path="productList" element={<ProductList />}/>
+            <Route path="createProduct" element={<CreateProducts />}/>
+          </Route>
           <Route path="purchases" element={<PurchasesManagement />}/>
           <Route path="transactions" element={<TransactionsManagement />}/>
         </Route>

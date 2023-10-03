@@ -177,7 +177,7 @@ const NavSidebar = () => {
                 />
                 <Item
                 title="Role Management"
-                to="userManagement/RolesManagement"
+                to="userManagement/roleManagement"
                 icon={<PeopleOutlinedIcon />}
                 selected={selected}
                 setSelected={setSelected}
@@ -187,11 +187,37 @@ const NavSidebar = () => {
 
             <Item
               title="Products"
-              to="products"
+              to="products/productList"
               icon={<ContactsOutlinedIcon />}
               selected={selected}
               setSelected={setSelected}
             />
+              {(selected === "Products"
+                || selected === "Products List" 
+                || selected === "Create Product" 
+              ) && 
+                <Box
+                sx={{
+                    margin:"0em 0em 0em 2em"
+                  }}
+                >
+                  <Item
+                  title="Products List"
+                  to="products/productList"
+                  icon={<PeopleOutlinedIcon />}
+                  selected={selected}
+                  setSelected={setSelected}
+                  />
+                  <Item
+                  title="Create Product"
+                  to="products/createProduct"
+                  icon={<PeopleOutlinedIcon />}
+                  selected={selected}
+                  setSelected={setSelected}
+                  />
+                </Box>
+              }
+
             <Item
               title="Purchases"
               to="purchases"
