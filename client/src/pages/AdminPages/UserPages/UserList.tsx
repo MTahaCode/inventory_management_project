@@ -374,7 +374,12 @@ const UserList = () => {
 
     if (isConfirmed)
     {
-      fetch(`/User/${row.DbId}`)
+      fetch(`/User/${row.DbId}`,{
+        method: 'delete',
+        headers: {
+          'Content-Type': 'application/json',
+        },
+      })
       .then(res => res.json())
       .then((data) => {
         setTrigger(!Trigger);
