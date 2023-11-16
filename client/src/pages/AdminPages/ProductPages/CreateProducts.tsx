@@ -8,7 +8,16 @@ const Form = () => {
   const isNonMobile = useMediaQuery("(min-width:600px)");
 
   const handleFormSubmit = (values: any) => {
-    console.log(values);
+    fetch("/Product",{
+      method: 'post',
+      headers: {
+          "Content-Type": "application/json"
+      },
+      body: JSON.stringify(values),
+    }).then(res => res.json())
+    .then((data) => {
+        alert(data.message);
+    })
   };
 
   return (
@@ -48,10 +57,23 @@ const Form = () => {
                 label="Name"
                 onBlur={handleBlur}
                 onChange={handleChange}
-                value={values.firstName}
-                name="firstName"
-                error={!!touched.firstName && !!errors.firstName}
-                helperText={touched.firstName && errors.firstName}
+                value={values.name}
+                name="name"
+                error={!!touched.name && !!errors.name}
+                helperText={touched.name && errors.name}
+                sx={{ gridColumn: "span 3" }}
+              />
+              <TextField
+                fullWidth
+                variant="filled"
+                type="number"
+                label="Price"
+                onBlur={handleBlur}
+                onChange={handleChange}
+                value={values.price}
+                name="price"
+                error={!!touched.price && !!errors.price}
+                helperText={touched.price && errors.price}
                 sx={{ gridColumn: "span 3" }}
               />
               <TextField
@@ -61,10 +83,23 @@ const Form = () => {
                 label="Method of Measurement"
                 onBlur={handleBlur}
                 onChange={handleChange}
-                value={values.email}
-                name="email"
-                error={!!touched.email && !!errors.email}
-                helperText={touched.email && errors.email}
+                value={values.measuring}
+                name="measuring"
+                error={!!touched.measuring && !!errors.measuring}
+                helperText={touched.measuring && errors.measuring}
+                sx={{ gridColumn: "span 3" }}
+              />
+              <TextField
+                fullWidth
+                variant="filled"
+                type="number"
+                label="Quantity"
+                onBlur={handleBlur}
+                onChange={handleChange}
+                value={values.quantity}
+                name="quantity"
+                error={!!touched.quantity && !!errors.quantity}
+                helperText={touched.quantity && errors.quantity}
                 sx={{ gridColumn: "span 3" }}
               />
               <TextField
@@ -74,10 +109,10 @@ const Form = () => {
                 label="Description"
                 onBlur={handleBlur}
                 onChange={handleChange}
-                value={values.contact}
-                name="contact"
-                error={!!touched.contact && !!errors.contact}
-                helperText={touched.contact && errors.contact}
+                value={values.desc}
+                name="desc"
+                error={!!touched.desc && !!errors.desc}
+                helperText={touched.desc && errors.desc}
                 sx={{ gridColumn: "span 3" }}
               />
             </Box>
@@ -93,27 +128,22 @@ const Form = () => {
   );
 };
 
-const phoneRegExp =
-  /^((\+[1-9]{1,4}[ -]?)|(\([0-9]{2,3}\)[ -]?)|([0-9]{2,4})[ -]?)*?[0-9]{3,4}[ -]?[0-9]{3,4}$/;
+// const phoneRegExp =
+//   /^((\+[1-9]{1,4}[ -]?)|(\([0-9]{2,3}\)[ -]?)|([0-9]{2,4})[ -]?)*?[0-9]{3,4}[ -]?[0-9]{3,4}$/;
 
 const checkoutSchema = yup.object().shape({
-  firstName: yup.string().required("required"),
-  lastName: yup.string().required("required"),
-  email: yup.string().email("invalid email").required("required"),
-  contact: yup
-    .string()
-    .matches(phoneRegExp, "Phone number is not valid")
-    .required("required"),
-  address1: yup.string().required("required"),
-  address2: yup.string().required("required"),
+  name: yup.string().required("required"),
+  desc: yup.string(),
+  price: yup.number().required("required"),
+  measuring: yup.string().required("required"),
+  quantity: yup.number(),
 });
 const initialValues = {
-  firstName: "",
-  lastName: "",
-  email: "",
-  contact: "",
-  address1: "",
-  address2: "",
+  name: "",
+  desc : "",
+  price: 0,
+  measuring: "1kg",
+  quantity: 0,
 };
 
 export default Form;

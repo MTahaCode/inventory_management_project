@@ -10,8 +10,12 @@ app.use(express.json());
 global.db;
 
 const userRoutes = require("./routes/User");
+const productRoutes = require("./routes/Product");
+const posRoutes = require("./routes/POS");
 
 app.use('/User', userRoutes);
+app.use('/Product', productRoutes);
+app.use('/POS', posRoutes);
 
 // const userRoute = require("./routes/User")
 // app.use("/User", userRoute);
