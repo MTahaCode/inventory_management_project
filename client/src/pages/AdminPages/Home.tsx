@@ -1,5 +1,5 @@
 import { Box, Button, IconButton, Typography, useTheme } from '@mui/material'
-import React from 'react'
+import React, { useEffect, useState } from 'react'
 import { tokens } from '../../Themes/theme'
 import StatBox from '../../Components/StatBox'
 import EmailIcon from "@mui/icons-material/Email";
@@ -13,11 +13,58 @@ import { AdapterDayjs } from '@mui/x-date-pickers/AdapterDayjs';
 import { LocalizationProvider } from '@mui/x-date-pickers/LocalizationProvider';
 import { DatePicker } from '@mui/x-date-pickers/DatePicker';
 import LineChart from '../../Components/LineChart';
+import dayjs from 'dayjs';
+
+interface GraphCol {
+  date: String;
+  transactionCount: Number;
+}
+
+interface GraphDataProps {
+  id: string;
+  color: string;
+  data: GraphCol[];
+}
 
 const Home = () => {
 
   const theme = useTheme();
   const colors = tokens(theme.palette.mode);
+
+  const [date,setDate] = useState<dayjs.Dayjs | null>(dayjs());
+
+  const [GraphEnteries,setGraphEnteries] = useState<GraphDataProps[]>([]);
+  const [Revenue, setRevenue] = useState<number>();
+
+  const [TotalSales, setTotalSales] = useState<number>(0);
+  const [NetProfit, setNetProfit] = useState<number>(0);
+
+  useEffect(() => {
+    fetch("/POS/revenue")
+    .then(res => res.json())
+    .then((data: { Revenue: number, result: GraphCol[] } ) => {
+
+      const Required = [{
+        id: "Revenue",
+        color: tokens("dark").greenAccent[500],
+        data: data.result,
+      }]
+
+      setRevenue(data.Revenue);
+
+      setGraphEnteries(Required);
+    })
+  },[]);
+
+  useEffect(() => {
+    fetch(`/POS/${date}`)
+    .then(res => res.json())
+    .then((data: { Transactions: number, NetProfit: number }) => {
+      setTotalSales(data.Transactions);
+      setNetProfit(data.NetProfit);
+      // console.log(data);
+    });
+  },[date]);
 
   return (
     <Box m="20px">
@@ -51,7 +98,9 @@ const Home = () => {
           }}
         >
           <LocalizationProvider dateAdapter={AdapterDayjs}>
-              <DatePicker label="Basic date picker" />
+              <DatePicker label="Basic date picker" value={date} onChange={(newDate) => {
+                setDate(newDate ? dayjs(newDate) : null);
+              }}/>
           </LocalizationProvider>
         </Box>
         <Box
@@ -71,7 +120,7 @@ const Home = () => {
             }}
           >
             <StatBox
-              title="12,361"
+              title={`${TotalSales}`}
               subtitle="Total Sales"
               progress="0.75"
               increase=""
@@ -92,7 +141,7 @@ const Home = () => {
             }}
           >
             <StatBox
-              title="431,225"
+              title={`${TotalSales}`}
               subtitle="Total Purchases"
               progress="0.50"
               increase="+21%"
@@ -113,7 +162,7 @@ const Home = () => {
             }}
           >
             <StatBox
-              title="32,441"
+              title={`${NetProfit}`}
               subtitle="Net Profit"
               progress="0.30"
               increase="+5%"
@@ -146,14 +195,14 @@ const Home = () => {
                   fontWeight="600"
                   color={colors.grey[100]}
                 >
-                  Revenue For Last 30 Days
+                  Revenue for the last week
                 </Typography>
                 <Typography
                   variant="h3"
                   fontWeight="bold"
                   color={colors.greenAccent[500]}
                 >
-                  $59,342.32
+                  {`Rs ${Revenue}`}
                 </Typography>
               </Box>
               <Box>
@@ -165,10 +214,10 @@ const Home = () => {
               </Box>
             </Box>
             <Box height="250px" m="-20px 0 0 0">
-              <LineChart isDashboard={true} />
+              <LineChart isDashboard={true} GraphEnteries={GraphEnteries}/>
             </Box>
           </Box>
-          <Box
+          {/* <Box
             sx={{
               gridColumn:"span 4",
               gridRow:"span 2",
@@ -221,7 +270,7 @@ const Home = () => {
                 </Box>
               </Box>
             ))} */}
-          </Box>
+          {/*</Box> */}
 
           {/* ROW 3 */}
           {/* <Box

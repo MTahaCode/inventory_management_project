@@ -634,7 +634,7 @@ const POS = () => {
                 </Box>
               </Box>
             </Modal>
-            <Header title="Products" subtitle="Manage Products" />
+            <Header title="Point of Sale" subtitle="Manage Sales" />
             <Box
                 sx={{
                     gridColumn:"span 4",

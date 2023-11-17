@@ -7,7 +7,20 @@ import CloseIcon from '@mui/icons-material/Close';
 // import LockOpenOutlinedIcon from "@mui/icons-material/LockOpenOutlined";
 // import SecurityOutlinedIcon from "@mui/icons-material/SecurityOutlined";
 import Header from "../../Components/Header";
-import { useState } from "react";
+import { useEffect, useState } from "react";
+
+interface listOfItems {
+    Name: string;
+    UnitPrice: number;
+    Quantity: number;
+}
+
+interface TransactionProps {
+  ListOfItems: listOfItems[];
+  Date: string;
+  Time: string;
+  Total: number;
+}
 
 const TransactionsList = () => {
   
@@ -15,10 +28,44 @@ const TransactionsList = () => {
   //change the datatype of row
   //add the product list from the database
   //can also add the date and custimer name
-  const HandleModal = (row: any) => {
-    console.log(row);
+
+  const [TransactionsList,setTransactionsList] = useState<TransactionProps[]>([]);
+
+  const [Selected, setSelected] = useState<listOfItems[]>([]);
+
+  useEffect(() => {
+    fetch("/POS")
+    .then(res => res.json())
+    .then((data: TransactionProps[]) => {
+      console.log(data);
+
+      const dataWithIds = data.map((item, index) => {
+        return {
+          id: index+1,
+          ...item,
+        }
+      })
+      console.log(dataWithIds);
+      setTransactionsList(dataWithIds);
+    });
+  },[]);
+
+  const HandleModal = (row: TransactionProps) => {
+    // console.log(row);
+
+    const List = row.ListOfItems.map((item, index) => {
+      return {
+        id: index+1,
+        ...item,
+      }
+    })
+
+    console.log(List);
+
+    setSelected(List);
     setIsModalCollapsed(true);
   }
+
   const theme = useTheme();
   const colors = tokens(theme.palette.mode);
   const modalStyle = {
@@ -33,34 +80,41 @@ const TransactionsList = () => {
     boxShadow: 24,
     p: 4,
   };
-  const mockDataTeam = [
-    {
-      id: 1,
-      date: new Date(),
-      product: "Apple",
-      quantity: 100,
-      unitPrice: 200,
-      totalPrice: 20000,
-    },
-  ];
+  // const mockDataTeam = [
+  //   {
+  //     id: 1,
+  //     date: new Date(),
+  //     product: "Apple",
+  //     quantity: 100,
+  //     unitPrice: 200,
+  //     totalPrice: 20000,
+  //   },
+  // ];
   const columnsForTransactions: GridColDef[] = [
     { field: "id", headerName: "ID" },
     {
-      field: "date",
+      field: "Date",
       headerName: "Date of Purchase",
-      type:"dateTime",
+      type:"string",
       flex: 1,
       cellClassName: "name-column--cell",
     },
     {
-      field: "customer",
-      headerName: "Customer",
+      field: "Time",
+      headerName: "Time of Purchase",
+      type:"string",
       flex: 1,
-      headerAlign: "left",
-      align: "left",
+      cellClassName: "name-column--cell",
     },
+    // {
+    //   field: "customer",
+    //   headerName: "Customer",
+    //   flex: 1,
+    //   headerAlign: "left",
+    //   align: "left",
+    // },
     {
-      field: "totalPrice",
+      field: "Total",
       headerName: "Total Price",
       type: "number",
       flex: 1,
@@ -107,21 +161,21 @@ const TransactionsList = () => {
   ];
 
   const columnsForProducts: GridColDef[] = [
-    { field: "id", headerName: "ID" },
+    { field: "id", headerName: "Id" },
     {
-      field: "name",
+      field: "Name",
       headerName: "Product",
       flex: 1,
       cellClassName: "name-column--cell",
     },
     {
-      field: "quantity",
+      field: "Quantity",
       headerName: "Quantity",
       flex: 1,
       cellClassName: "name-column--cell",
     },
     {
-      field: "unitPrice",
+      field: "UnitPrice",
       headerName: "Unit Price",
       flex: 1,
       headerAlign: "left",
@@ -134,6 +188,11 @@ const TransactionsList = () => {
       flex: 1,
       headerAlign: "left",
       align: "left",
+      valueGetter: (params) => {
+        const quantity = params.row.Quantity;
+        const price = params.row.UnitPrice;
+        return quantity * price;
+      }
     },
   ];
 
@@ -183,7 +242,7 @@ const TransactionsList = () => {
               },
             }}
           >
-            <DataGrid checkboxSelection rows={mockDataTeam} columns={columnsForProducts} />
+            <DataGrid rows={Selected} columns={columnsForProducts} />
             {/* <DataGrid checkboxSelection rows={mockDataTeam} columns={columns} /> */}
           </Box>
         </Box>
@@ -218,7 +277,7 @@ const TransactionsList = () => {
           },
         }}
       >
-        <DataGrid checkboxSelection rows={mockDataTeam} columns={columnsForTransactions} />
+        <DataGrid rows={TransactionsList} columns={columnsForTransactions} />
         {/* <DataGrid checkboxSelection rows={mockDataTeam} columns={columns} /> */}
       </Box>
     </Box>

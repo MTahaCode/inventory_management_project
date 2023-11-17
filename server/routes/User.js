@@ -93,5 +93,35 @@ router.post('/', async (req, res) => {
     }
 });
 
+router.post("/login", (req, res) => {
+    db.collection("Users_Information")
+    .findOne({"Name": req.body.name , "Password":req.body.password})
+    .then(
+        (member) => {
+            console.log(member);
+                if (member === null)
+                {
+                    res.json({User:"none"})
+                }
+                else if (member.Role === "admin")
+                {
+                    res.json({User:"admin"})
+                }
+                else if (member.Role === "manager")
+                {
+                    res.json({
+                        User:"manager",
+                        // StoreId: member.StoreId,
+                    })
+                }
+                else if (member.Role === "staff")
+                {
+                    res.json({User:"staff",
+                            //   storeId: member.StoreId,
+                            })
+                }
+        }
+    )
+})
 
 module.exports = router;

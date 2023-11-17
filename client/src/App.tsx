@@ -18,6 +18,8 @@ import RoleManagement from "./Pages/AdminPages/UserPages/RoleManagement"
 import ProductList from "./Pages/AdminPages/ProductPages/ProductList";
 import CreateProducts from "./Pages/AdminPages/ProductPages/CreateProducts"
 import POS from "./Pages/AdminPages/POS";
+import Login from "./Pages/Login";
+import Staff from "./Pages/Staff";
 import { BrowserRouter, Link, Outlet, Route, Routes, useLocation, useNavigate } from "react-router-dom"
 
 const App: React.FC = () => {
@@ -26,6 +28,7 @@ const App: React.FC = () => {
     <Box>
       <Routes>
         {/* <Route path="/" element={<Login />}/> */}
+        <Route path="/" element={<Login />} />
         <Route path="/admin" element={<Admin />}>
           <Route path="" element={<Home />}/>
           <Route path="userManagement" element={<UserManagement />}>
@@ -41,8 +44,8 @@ const App: React.FC = () => {
           <Route path="purchases" element={<PurchasesManagement />}/>
           <Route path="transactions" element={<TransactionsManagement />}/>
         </Route>
-        {/* <Route path="/manager" element={<Manager />}/>
-        <Route path="/staff" element={<Staff />}/> */}
+        {/* <Route path="/manager" element={<Manager />}/>*/}
+        <Route path="/staff" element={<Staff />}/>
       </Routes>
     </Box>
   );
