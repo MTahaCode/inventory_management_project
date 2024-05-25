@@ -6,20 +6,20 @@ import { useEffect, useState } from "react";
 // import Staff from "./pages/Staff";
 // import Store from "./components/Store";
 // import AdminHome from "./components/AdminHome"
-import Home from "./Pages/AdminPages/Home";
-import ProductsManagement from "./Pages/AdminPages/ProductsManagement";
-import PurchasesManagement from "./Pages/AdminPages/PurchasesManagement";
-import TransactionsManagement from "./Pages/AdminPages/TransactionsManagement";
-import UserManagement from "./Pages/AdminPages/UserManagement";
-import Admin from "./Pages/Admin";
-import CreateUser from "./Pages/AdminPages/UserPages/CreateUser"
-import UserList from "./Pages/AdminPages/UserPages/UserList"
-import RoleManagement from "./Pages/AdminPages/UserPages/RoleManagement"
-import ProductList from "./Pages/AdminPages/ProductPages/ProductList";
-import CreateProducts from "./Pages/AdminPages/ProductPages/CreateProducts"
-import POS from "./Pages/AdminPages/POS";
-import Login from "./Pages/Login";
-import Staff from "./Pages/Staff";
+import Home from "./pages/AdminPages/Home";
+import ProductsManagement from "./pages/AdminPages/ProductsManagement";
+import PurchasesManagement from "./pages/AdminPages/PurchasesManagement";
+import TransactionsManagement from "./pages/AdminPages/TransactionsManagement";
+import UserManagement from "./pages/AdminPages/UserManagement";
+import Admin from "./pages/Admin";
+import CreateUser from "./pages/AdminPages/UserPages/CreateUser"
+import UserList from "./pages/AdminPages/UserPages/UserList"
+import RoleManagement from "./pages/AdminPages/UserPages/RoleManagement"
+import ProductList from "./pages/AdminPages/ProductPages/ProductList";
+import CreateProducts from "./pages/AdminPages/ProductPages/CreateProducts"
+import POS from "./pages/AdminPages/POS";
+import Login from "./pages/Login";
+import Staff from "./pages/Staff";
 import { BrowserRouter, Link, Outlet, Route, Routes, useLocation, useNavigate } from "react-router-dom"
 
 const App: React.FC = () => {
