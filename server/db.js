@@ -1,12 +1,18 @@
 const {MongoClient} = require('mongodb');
+require("dotenv").config();
 
 let dbConnection;
 
+const username = process.env.USER;
+const password = process.env.PASSWORD;
+
+const dbURL = `mongodb+srv://${username}:${password}@inventorymgmtsystem.ihafze5.mongodb.net/`;
+
 module.exports = {
     connectToDb:(cb) => {
-        MongoClient.connect("mongodb://127.0.0.1:27017/Inventory_Management_DB")
+        MongoClient.connect(dbURL, { dbName:"inventory-mgmt-system" })
         .then((client) => {
-            dbConnection = client.db();
+            dbConnection = client.db("inventory-mgmt-system");
             return cb();
         })
         .catch(err => {
