@@ -3,8 +3,8 @@ require("dotenv").config();
 
 let dbConnection;
 
-const username = process.env.USER;
-const password = process.env.PASSWORD;
+const username = "tahamakhdoom10";
+const password = "XLvZtgcIspiBIgei";
 
 const dbURL = `mongodb+srv://${username}:${password}@inventorymgmtsystem.ihafze5.mongodb.net/`;
 
