@@ -40,7 +40,7 @@ const Home = () => {
   const [NetProfit, setNetProfit] = useState<number>(0);
 
   useEffect(() => {
-    fetch("/POS/revenue")
+    fetch(process.env.REACT_APP_BACKEND_URL + "/POS/revenue")
     .then(res => res.json())
     .then((data: { Revenue: number, result: GraphCol[] } ) => {
 

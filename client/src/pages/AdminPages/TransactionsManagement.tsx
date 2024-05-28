@@ -34,7 +34,7 @@ const TransactionsList = () => {
   const [Selected, setSelected] = useState<listOfItems[]>([]);
 
   useEffect(() => {
-    fetch("/POS")
+    fetch(process.env.REACT_APP_BACKEND_URL + "/POS")
     .then(res => res.json())
     .then((data: TransactionProps[]) => {
       console.log(data);

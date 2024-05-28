@@ -28,7 +28,7 @@ const Form: React.FC<FormProps> = ({setTrigger, Trigger, setIsModalCollapsed}) =
 
     if (isConfirmed)
     {
-      fetch("/Product", {
+      fetch(process.env.REACT_APP_BACKEND_URL + "/Product", {
         method: "put",
         headers: {
           "Content-Type": "application/json"
@@ -240,7 +240,7 @@ const ProductList = () => {
   ];
 
   useEffect(() => {
-    fetch("/Product")
+    fetch(process.env.REACT_APP_BACKEND_URL + "/Product")
     .then(res => res.json())
     .then(
       (data: ProductProps[]) => {

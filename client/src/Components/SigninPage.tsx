@@ -16,7 +16,10 @@ const SigninPage: React.FC = () => {
       name: UserName,
       password: Password,
     }
-    fetch("/User/login", {
+
+    console.log("the url: " + process.env.REACT_APP_BACKEND_URLBACKEND_URL);
+
+    fetch(process.env.REACT_APP_BACKEND_URL + "/User/login", {
         method: 'post',
         headers: {
             "Content-Type": "application/json"

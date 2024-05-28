@@ -8,7 +8,7 @@ const Form = () => {
   const isNonMobile = useMediaQuery("(min-width:600px)");
 
   const handleFormSubmit = (values: any) => {
-    fetch("/user",{
+    fetch(process.env.REACT_APP_BACKEND_URL + "/user",{
       method: 'post',
       headers: {
           "Content-Type": "application/json"

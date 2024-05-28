@@ -28,7 +28,7 @@ const Form: React.FC<FormProps> = ({setTrigger, Trigger, setIsModalCollapsed}) =
 
     if (isConfirmed)
     {
-      fetch("/user", {
+      fetch(process.env.REACT_APP_BACKEND_URL + "/user", {
         method: "put",
         headers: {
           "Content-Type": "application/json"
@@ -402,7 +402,7 @@ const UserList = () => {
 
   const [Trigger, setTrigger] = useState(false);
   useEffect(() => {
-    fetch("/User")
+    fetch(process.env.REACT_APP_BACKEND_URL + "/User")
     .then(res => res.json())
     .then((data : userListProps[]) => {
       const RequiredInfo = data.map((user, index) => {

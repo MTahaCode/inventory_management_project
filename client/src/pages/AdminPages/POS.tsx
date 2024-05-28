@@ -39,7 +39,7 @@ const List: React.FC<ListProps> = ({Receipt, setReceipt, ProductsList, setProduc
     const colors = tokens(theme.palette.mode);
   
     useEffect(() => {
-      fetch("/Product")
+      fetch(process.env.REACT_APP_BACKEND_URL + "/Product")
       .then(res => res.json())
       .then(
         (data: ProductProps[]) => {
