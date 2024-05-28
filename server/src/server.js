@@ -5,7 +5,11 @@ const express = require('express');
 const {connectToDb, getDb} = require('./db');
 const { ObjectId } = require('mongodb');
 const cron = require("node-cron");
+const cors = require("cors");
 const app = express();
+
+app.use(cors());
+
 app.use(express.json());
 global.db;
 
